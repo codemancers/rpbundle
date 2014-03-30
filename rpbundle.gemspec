@@ -1,14 +1,14 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'ruby_processing_bundle/version'
+require 'rpbundle/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "ruby_processing_bundle"
-  spec.version       = RubyProcessingBundle::VERSION
+  spec.name          = "rpbundle"
+  spec.version       = Rpbundle::VERSION
   spec.authors       = ["Emil Soman"]
   spec.email         = ["emil.soman@gmail.com"]
-  spec.summary       = %q{Use Gemfiles for your ruby-processing sketches}
+  spec.summary       = %q{Use Gemfiles in your ruby-processing sketches}
   spec.homepage      = ""
   spec.license       = "MIT"
 

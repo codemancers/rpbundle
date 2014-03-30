@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+
+require 'ruby-processing'
+
+# This is where ruby-processing holds jruby-complete.jar
+JRUBY_COMPLETE = Processing::Runner.new.send(:jruby_complete)
+# This is where rpbundle installs and reads gems from
+RPBUNDLE_HOME = File.join Dir.home, '.rpbundle'
+
+# Monkeypatch Processing::Runner so that jruby runs our `bundled_runner`
+# and pass the original runner filename as an argument to it
+class Processing::Runner
+  def spin_up(starter_script, sketch, args)
+    # Make sure that Processing::Runner knows we don't want system wide jruby
+    @options.nojruby = true
+    bundled_runner = File.join(File.dirname(__FILE__), '../lib/rpbundle/bundled_runner.rb')
+    runner = "#{RP5_ROOT}/lib/ruby-processing/runners/#{starter_script}"
+    java_args = discover_java_args(sketch).join(' ')
+    system "GEM_PATH=#{RPBUNDLE_HOME} java #{java_args} -cp #{jruby_complete} " +
+      "org.jruby.Main #{bundled_runner} #{runner} #{sketch} #{args}"
+  end
+end
+
+def run
+  case ARGV[0]
+  when 'setup'
+    setup
+  when 'install'
+    bundle_install
+  when 'help', '--help', '', nil
+    show_help
+  else
+    execute_with_processing(ARGV)
+  end
+end
+
+def setup
+  Dir.mkdir RPBUNDLE_HOME unless Dir.exist?(RPBUNDLE_HOME)
+  # Install bundler gem into RPBUNDLE_HOME using jruby_complete
+  system "java -jar #{JRUBY_COMPLETE} -S gem install -i #{RPBUNDLE_HOME} --no-rdoc --no-ri bundler"
+end
+
+def bundle_install
+  system("GEM_HOME=#{RPBUNDLE_HOME} GEM_PATH=#{RPBUNDLE_HOME} " +
+    "java -jar #{JRUBY_COMPLETE} -S bundle install")
+end
+
+def execute_with_processing(args)
+  Processing::Runner.execute
+end
+
+def show_help
+  puts """
+  rpbundle setup   - Prerequisite step. Creates ~/.rpbundle directory
+                     and installs bundler gem into ~/.rpbundle
+  rpbundle install - Install dependencies in your Gemfile
+  rpbundle help    - Show this help text
+  rpbundle <any rp5 command line arguments> - Load gems and run rp5 commands
+    example: rpbundle run sketch.rb. This will load Gemfile dependencies and
+    run `rp5 run sketch.rb`
+  """
+end
+
+run

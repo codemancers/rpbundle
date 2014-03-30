@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in ruby_processing_bundle.gemspec
+# Specify your gem's dependencies in rpbundle.gemspec
 gemspec
