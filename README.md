@@ -65,7 +65,7 @@ rp5bundle is a basically a wrapper around rp5 and does 2 things :
 
 ## Contributing
 
-1. Fork it ( http://github.com/emilsoman/rpbundle/fork )
+1. Fork it ( http://github.com/code-mancers/rpbundle/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

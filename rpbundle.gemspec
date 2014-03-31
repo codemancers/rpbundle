@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Emil Soman"]
   spec.email         = ["emil.soman@gmail.com"]
   spec.summary       = %q{Use Gemfiles in your ruby-processing sketches}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/code-mancers/rpbundle"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
