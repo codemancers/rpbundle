@@ -22,16 +22,19 @@ class Processing::Runner
   end
 end
 
+# Except for setup, exec and help subcommands, pass everything else to bundler
 def run
-  case ARGV[0]
+  subcommand = ARGV[0]
+  case subcommand
   when 'setup'
     setup
-  when 'install'
-    bundle_install
-  when 'help', '--help', '', nil
+  when 'exec'
+    ARGV.shift #Do not pass "exec" subcommand
+    execute_with_processing
+  when 'help', '--help', nil
     show_help
   else
-    execute_with_processing
+    execute_with_bundler
   end
 end
 
@@ -41,9 +44,9 @@ def setup
   system "java -jar #{JRUBY_COMPLETE} -S gem install -i #{RPBUNDLE_HOME} --no-rdoc --no-ri bundler"
 end
 
-def bundle_install
+def execute_with_bundler
   system({ 'GEM_HOME' => RPBUNDLE_HOME, 'GEM_PATH' => RPBUNDLE_HOME },
-    "java -jar #{JRUBY_COMPLETE} -S bundle install")
+    "java -jar #{JRUBY_COMPLETE} -S bundle #{ARGV.join(' ')}")
 end
 
 def execute_with_processing
@@ -56,9 +59,11 @@ def show_help
                      and installs bundler gem into ~/.rpbundle
   rpbundle install - Install dependencies in your Gemfile
   rpbundle help    - Show this help text
-  rpbundle <any rp5 command line arguments> - Load gems and run rp5 commands
-    example: rpbundle run sketch.rb. This will load Gemfile dependencies and
-    run `rp5 run sketch.rb`
+  rpbundle exec <any rp5 command line arguments> - Load gems and run rp5 commands
+    example: 'rpbundle exec run sketch.rb' - This will load Gemfile dependencies and
+    run 'rp5 run sketch.rb'
+  rpbudle <bundler subcommand> - Passes on subcommand to bundler.
+    example : 'rpbundle list' - This will run 'bundle list' on rpbundle's bundler
   """
 end
 

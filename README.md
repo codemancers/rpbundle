@@ -43,20 +43,25 @@ as well.
 This gem comes with an executable `rpbundle`.
 
 Prerequisite step for setting up :
-   
+
     $ rpbundle setup
-    
+
 The above command creates a directory at `~/.rpbundle` and installs `bundler`
 gem into it.
 
 Inside a sketch/project directory with a Gemfile, to install dependent gems :
-    
+
     $ rpbundle install
 
 To run/watch/<other subcommands supported by rp5> your sketch using
 rp5 command and load your gem dependencies while doing so :
-    
-    $ rpbundle run/watch/.. my_sketch.rb
+
+    $ rpbundle exec run/watch/.. my_sketch.rb
+
+To run other bundler subcommands, just pass the subcommand to rpbundle.
+`bundle list` for example :
+
+    $ rpbundle list
 
 rp5bundle is a basically a wrapper around rp5 and does 2 things :
 
